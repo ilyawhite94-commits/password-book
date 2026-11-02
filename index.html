@@ -46,6 +46,7 @@ input[type=color]{width:60px;height:38px;padding:2px;border:1px solid var(--line
 .bv{display:flex;flex-direction:column}
 .a-ban{order:1}.a-name{order:2;text-align:center}.a-page{order:3}.a-card{order:4}.a-ctrl{order:5}.a-pick{order:6}
 .a-ctrl{justify-content:center;margin:4px 0 12px}
+.ph{display:none}
 @media (min-width:900px){
 main.wide{max-width:760px}
 .paper{display:grid;grid-template-columns:1fr 1fr}
@@ -53,7 +54,11 @@ main.wide{max-width:760px}
 @media (min-width:1500px){
 main.wide{max-width:none;padding:12px 28px}
 main.wide #tabs{max-width:640px;margin-left:auto;margin-right:auto}
-.bv{display:grid;grid-template-columns:minmax(0,1fr) 640px minmax(0,1fr);grid-template-areas:"pick name ban" "pick page card" "pick ctrl card";grid-template-rows:auto auto 1fr;gap:4px 20px;align-items:start}
+.bv{display:grid;grid-template-columns:minmax(0,1fr) 640px minmax(0,1fr);grid-template-areas:".  name  ." "pick page card" ".  ctrl  .";grid-template-rows:auto auto auto;gap:8px 20px;align-items:start}
+.bv:not(.bind) .a-ban{display:none}
+.a-pick,.a-card{align-self:stretch}
+.a-pick>.card,.a-card>.card{height:100%;margin:0}
+.ph{display:block}
 .bv>div{order:0}
 .a-ban{grid-area:ban}.a-name{grid-area:name}.a-page{grid-area:page}.a-card{grid-area:card}.a-ctrl{grid-area:ctrl}.a-pick{grid-area:pick}
 .pk2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
@@ -63,7 +68,10 @@ main.wide #tabs{max-width:640px;margin-left:auto;margin-right:auto}
 @media (min-width:1100px){
 main.wide.bindm{max-width:none;padding:12px 28px}
 main.wide.bindm #tabs{max-width:640px;margin-left:auto;margin-right:auto}
-.bv.bind{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"pick name" "pick page" "ban ctrl";grid-template-rows:auto 1fr auto;gap:8px 28px;align-items:start}
+.bv.bind{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:". name" "pick page" "ban ctrl";grid-template-rows:auto auto auto;gap:8px 28px;align-items:start}
+.bv.bind .a-pick{align-self:stretch}
+.bv.bind .a-pick>.card{height:100%;margin:0}
+.bv.bind .a-ban{display:block}
 .bv.bind>div{order:0;min-width:0}
 .bv.bind .a-ban{grid-area:ban}.bv.bind .a-name{grid-area:name}.bv.bind .a-page{grid-area:page}.bv.bind .a-ctrl{grid-area:ctrl}.bv.bind .a-pick{grid-area:pick}
 .bv.bind .a-card{display:none}
@@ -202,7 +210,7 @@ function render(){
  ct=`<button onclick="showPick=!showPick;render()">${showPick?"Скрыть поиск":"Найти страницу"}</button><input type="number" min="1" max="${TOT}" placeholder="№ стр." style="width:110px;margin:0" onchange="setPage(this.value-1)"><label class="mut"><input type="checkbox" ${blur?"checked":""} onchange="blur=this.checked;render()"> размыть текст</label>`;
  if(showPick)pk=`<div class="card"><div class="row" style="margin-bottom:6px">${CT.map((c,i)=>`<button class="${i===tab?"p":""}" onclick="tab=${i};render()">${c[0]}</button>`).join("")}</div><div class="mut">Выбрано:</div><div>${chips()}</div><div class="pk2"><div><div class="mut">1) первый значок</div>${grid(0)}${cr(1,"цвет первого значка (необязательно)")}${dr(2,"цифра первого значка (необязательно)")}</div><div><div class="mut">2) второй значок</div>${grid(3)}${cr(4,"цвет второго значка (необязательно)")}${dr(5,"цифра второго значка (необязательно)")}</div></div><p><button class="p" onclick="openPick()">Открыть страницу</button></p></div>`;
  if(P){pg=`<div class="nav"><button onclick="setPage(enc(cur)-1)" aria-label="Назад">←</button><div><div class="big" style="margin:0">${ptag(cur)}</div><div class="mut">стр. ${(enc(cur)+1).toLocaleString("ru")} из ${TOT.toLocaleString("ru")}</div></div><button onclick="setPage(enc(cur)+1)" aria-label="Вперёд">→</button></div>`;pg+=`<div class="paper ${blur?"blur":""}">${P.map((x,l)=>`<div class="lr ${sel===l?"sel":""}"><input class="lb" type="text" maxlength="40" value="${esc(x.w)}" aria-label="Название строки ${l+1}" onchange="setLb(${l},this.value)"><div class="pw"><button class="ln ${x.c>=0?"m":""}" ${x.c>=0?`style="background:${C[x.c].c}"`:""} onclick="tap(${l})">${x.t}</button><button class="cp" onclick="copy(P[${l}].t)" aria-label="Копировать пароль строки ${l+1}">Копировать</button></div></div>`).join("")}</div>`;
-  if(sel!==null&&!mode){const c=P[sel].c;cd=`<div class="card"><b>Строка ${sel+1}${c>=0?": "+C[c].n+" маркер":": без маркера"}</b><div class="mut" style="margin-top:6px">Маркер этой строки (выберите цвет или уберите)</div><div class="pick" style="grid-template-columns:repeat(7,1fr)">${C.map((x,j)=>`<button class="${c===j?"on":""}" title="${x.n}" aria-label="${x.n} маркер" onclick="setMk(${sel},${j})"><span class="sw" style="background:${x.c};border:1px solid var(--line);width:20px;height:20px;margin:0"></span></button>`).join("")}<button ${c<0?"disabled":""} onclick="setMk(${sel},-1)" aria-label="Убрать маркер">✕</button></div><div class="row" style="margin-top:8px"><button class="p" onclick="copy(P[sel].t)">Скопировать</button><select id="bs" class="g">${V.acc.map((x,i)=>`<option value="${i}">${esc(x.n)}</option>`).join("")}</select><button onclick="bindSel()">Привязать</button></div></div>`}}
+  if(sel!==null&&!mode){const c=P[sel].c;cd=`<div class="card"><b>Строка ${sel+1}${c>=0?": "+C[c].n+" маркер":": без маркера"}</b><div class="mut" style="margin-top:6px">Маркер этой строки (выберите цвет или уберите)</div><div class="pick" style="grid-template-columns:repeat(7,1fr)">${C.map((x,j)=>`<button class="${c===j?"on":""}" title="${x.n}" aria-label="${x.n} маркер" onclick="setMk(${sel},${j})"><span class="sw" style="background:${x.c};border:1px solid var(--line);width:20px;height:20px;margin:0"></span></button>`).join("")}<button ${c<0?"disabled":""} onclick="setMk(${sel},-1)" aria-label="Убрать маркер">✕</button></div><div class="row" style="margin-top:8px"><button class="p" onclick="copy(P[sel].t)">Скопировать</button><select id="bs" class="g">${V.acc.map((x,i)=>`<option value="${i}">${esc(x.n)}</option>`).join("")}</select><button onclick="bindSel()">Привязать</button></div></div>`}else if(!mode)cd=`<div class="card ph"><b>Строка не выбрана</b><p class="mut">Нажмите на пароль, чтобы выбрать цвет маркера, скопировать пароль или привязать его к аккаунту.</p></div>`}
  else if(!showPick)pg=`<p class="mut">Нажмите «Найти страницу».</p>`;
  a.innerHTML=`<div class="bv${mode?" bind":""}"><div class="a-ban">${ban}</div><div class="a-name">${nm}</div><div class="a-page">${pg}</div><div class="a-card">${cd}</div><div class="a-ctrl row">${ct}</div><div class="a-pick">${pk}</div></div>`}
 applyTheme();render();
