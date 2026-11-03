@@ -23,7 +23,8 @@ input[type=text],input[type=password],select,textarea{background:var(--paper);bo
 .mut{color:var(--mut);font-size:14px}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.row>.g{flex:1}
 .big{font-size:30px;line-height:1.2;text-align:center;margin:6px 0}
-.nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.nav>div{text-align:center}.chip{display:inline-block;min-width:34px;height:30px;line-height:28px;text-align:center;border:1px dashed var(--line);border-radius:6px;margin:0 1px;font-size:18px}.chip.f{border-style:solid}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.nav{display:grid;grid-template-columns:1fr auto 1fr;gap:8px}.nl{display:flex;gap:8px;align-items:center}.nr{display:flex;justify-content:flex-end}.ni{text-align:center}.nav .fp{flex:none;white-space:nowrap;padding:8px 10px;font-size:14px}.ni .mut{font-size:13px;white-space:nowrap}
+@media (max-width:600px){.nav{grid-template-columns:auto 1fr auto}.nl,.nr{display:contents}.nav .fp{grid-column:1/-1;grid-row:2}.ni .mut{white-space:normal}}.chip{display:inline-block;min-width:34px;height:30px;line-height:28px;text-align:center;border:1px dashed var(--line);border-radius:6px;margin:0 1px;font-size:18px}.chip.f{border-style:solid}
 .paper{background:var(--paper);border:1px solid var(--line);border-radius:4px 10px 10px 4px;border-left:6px solid var(--ink);padding:8px 0;margin-bottom:12px}
 .lr{padding:6px 8px 6px 6px;border-bottom:1px dashed var(--line)}
 .lr:last-child{border-bottom:0}
@@ -44,7 +45,7 @@ input.lb:focus{border-bottom-color:var(--mut);background:var(--bg)}
 @media (prefers-reduced-motion:reduce){#toast{transition:none}}
 input[type=color]{width:60px;height:38px;padding:2px;border:1px solid var(--line);border-radius:8px;background:var(--paper);cursor:pointer}
 .bv{display:flex;flex-direction:column}
-.a-ban{order:1}.a-name{order:2;text-align:center}.a-page{order:3}.a-card{order:4}.a-ctrl{order:5}.a-pick{order:6}
+.a-ban{order:1}.a-name{order:2;text-align:center}.a-nav{order:3}.a-page{order:4}.a-card{order:5}.a-ctrl{order:6}.a-pick{order:7}
 .a-ctrl{justify-content:center;margin:4px 0 12px}
 .ph{display:none}
 @media (min-width:900px){
@@ -54,29 +55,35 @@ main.wide{max-width:760px}
 @media (min-width:1500px){
 main.wide{max-width:none;padding:12px 28px}
 main.wide #tabs{max-width:640px;margin-left:auto;margin-right:auto}
-.bv{display:grid;grid-template-columns:minmax(0,1fr) 640px minmax(0,1fr);grid-template-areas:".  name  ." "pick page card" ".  ctrl  .";grid-template-rows:auto auto auto;gap:8px 20px;align-items:start}
+.bv{display:grid;grid-template-columns:minmax(0,1fr) 640px minmax(0,1fr);grid-template-areas:". name ." ". nav ." "pick page card" ". ctrl .";grid-template-rows:auto auto auto auto;gap:8px 20px;align-items:start}
 .bv:not(.bind) .a-ban{display:none}
-.a-pick,.a-card{align-self:stretch}
-.a-pick>.card,.a-card>.card{height:100%;margin:0}
+.a-pick,.a-card{align-self:start}
+.a-pick>.card,.a-card>.card{margin:0}
+.bv:not(.bind) .a-pick{align-self:center;height:0;display:flex;align-items:center;overflow:visible}
+.bv:not(.bind) .a-pick>.card{flex:1;min-width:0}
 .ph{display:block}
 .bv>div{order:0}
-.a-ban{grid-area:ban}.a-name{grid-area:name}.a-page{grid-area:page}.a-card{grid-area:card}.a-ctrl{grid-area:ctrl}.a-pick{grid-area:pick}
+.a-ban{grid-area:ban}.a-name{grid-area:name}.a-nav{grid-area:nav}.a-page{grid-area:page}.a-card{grid-area:card}.a-ctrl{grid-area:ctrl}.a-pick{grid-area:pick}
 .pk2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
 .pk2>div,.a-pick{min-width:0}
 .pick button{padding:4px 0;font-size:16px;min-width:0}
+.pick.ic{grid-template-columns:repeat(7,minmax(0,1fr))}
+.pick.ic button{font-size:24px;padding:5px 0}
 }
 @media (min-width:1100px){
 main.wide.bindm{max-width:none;padding:12px 28px}
 main.wide.bindm #tabs{max-width:640px;margin-left:auto;margin-right:auto}
-.bv.bind{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:". name" "pick page" "ban ctrl";grid-template-rows:auto auto auto;gap:8px 28px;align-items:start}
-.bv.bind .a-pick{align-self:stretch}
-.bv.bind .a-pick>.card{height:100%;margin:0}
+.bv.bind{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:". name" ". nav" "pick page" "ban ctrl";grid-template-rows:auto auto auto auto;gap:8px 28px;align-items:start}
+.bv.bind .a-pick{align-self:start}
+.bv.bind .a-pick>.card{margin:0}
 .bv.bind .a-ban{display:block}
 .bv.bind>div{order:0;min-width:0}
-.bv.bind .a-ban{grid-area:ban}.bv.bind .a-name{grid-area:name}.bv.bind .a-page{grid-area:page}.bv.bind .a-ctrl{grid-area:ctrl}.bv.bind .a-pick{grid-area:pick}
+.bv.bind .a-ban{grid-area:ban}.bv.bind .a-nav{grid-area:nav}.bv.bind .a-name{grid-area:name}.bv.bind .a-page{grid-area:page}.bv.bind .a-ctrl{grid-area:ctrl}.bv.bind .a-pick{grid-area:pick}
 .bv.bind .a-card{display:none}
 .bv.bind .pk2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
 .bv.bind .pick button{padding:4px 0;font-size:16px;min-width:0}
+.bv.bind .pick.ic{grid-template-columns:repeat(7,minmax(0,1fr))}
+.bv.bind .pick.ic button{font-size:22px;padding:5px 0}
 }
 </style></head><body><main>
 <div id="tabs" style="display:none"><button class="ex" onclick="lock()">← Книги</button><button data-v="book" onclick="go('book')">Книга</button><button data-v="acc" onclick="go('acc')">Аккаунты</button><button data-v="set" onclick="go('set')">Ещё</button></div>
@@ -160,6 +167,7 @@ const accPick=(k,e,c)=>`<div class="mut" style="margin-top:8px">Смайлик</
 function setAE(k,j){if(k==="n")nE=AE[j];else rE=AE[j];render()}
 function setAC(k,j){if(k==="n")nC=j;else rC=j;render()}
 function startRen(i){ren=i;rN=V.acc[i].n;rE=V.acc[i].i;rC=V.acc[i].m>=0?V.acc[i].m:-1;render()}
+function goPage(){const v=parseInt($("#pn").value,10);if(!v){toast("Введите номер страницы");return}setPage(v-1)}
 async function openLast(){cb=0;cur=(V.last&&V.last.length===6)?V.last:dec(0);P=await pgv(0,cur)}
 async function changePass(){const c=$("#c0").value,n=$("#c1").value,r=$("#c2").value;
  if(n.length<14){toast("Новая фраза слишком короткая: нужно хотя бы 14 символов");return}
@@ -186,7 +194,7 @@ async function showHint(i){const k=V.acc[i].k,pg=await pgv(k.b,k.t);hint={i,h:`�
 const cr=(i,l)=>`<div class="mut">${l}</div><div class="pick">${TC.map((x,j)=>`<button class="${pick[i]===j?"on":""}" aria-label="${x.n}" title="${x.n}" onclick="pk(${i},${j})"><span class="sw" style="background:${x.c};border:1px solid var(--line);width:20px;height:20px"></span></button>`).join("")}</div>`;
 const dr=(i,l)=>`<div class="mut">${l}</div><div class="pick">${[0,1,2,3,4,5,6,7,8,9].map(j=>`<button class="${pick[i]===j?"on":""}" onclick="pk(${i},${j})">${j}</button>`).join("")}</div>`;
 const chips=()=>{const q=(f,h)=>`<span class="chip ${f?"f":""}">${f?h:"—"}</span>`,s=i=>q(pick[i]!==null,pick[i]!==null?`<span class="sw" style="background:${TC[pick[i]].c};border:1px solid var(--line);width:16px;height:16px;margin:0"></span>`:"");return q(pick[0]!==null,pick[0])+s(1)+q(pick[2]!==null,pick[2])+" "+q(pick[3]!==null,pick[3])+s(4)+q(pick[5]!==null,pick[5])};
-const grid=i=>`<div class="pick">${CT[tab][1].map((e,j)=>`<button class="${pick[i]===e?"on":""}" onclick="pki(${i},${j})">${e}</button>`).join("")}</div>`;
+const grid=i=>`<div class="pick ic">${CT[tab][1].map((e,j)=>`<button class="${pick[i]===e?"on":""}" onclick="pki(${i},${j})">${e}</button>`).join("")}</div>`;
 const nm=k=>{try{return JSON.parse(localStorage.getItem(k)).nm}catch(e){}};
 let pd=null,showBk=false,showCh=false,ren=-1,dela=-1,askHint=-1,showTh=false,bkPrompt=false,nN="",nE="🔑",nC=-1,rN="",rE="",rC=-1;function delBook(k){if(pd!==k){pd=k;render();return}pd=null;localStorage.removeItem(k);hasV=slots().length>0;if(hasV&&!slots().includes(slot))slot=slots()[0];render()}
 function startHTML(){const b=busy?"disabled":"",ks=slots();
@@ -204,15 +212,15 @@ function render(){
  ${askHint===i&&x.k?`<div style="margin-top:8px"><label class="mut" for="hp">Мастер-фраза «ключ шифрования»</label><input id="hp" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')checkHint(${i})"><p><button class="p" onclick="checkHint(${i})">Показать подсказку</button> <button onclick="askHint=-1;render()">Отмена</button></p></div>`:""}
  ${dela===i?`<p class="mut">Аккаунт «${esc(x.n)}»${x.k?" и его привязка":""} будет удалён из списка. Пароли на страницах книги не меняются, вернуть аккаунт можно только добавив заново.</p>`:""}
  ${hint&&hint.i===i?`<p class="mut">${hint.h}</p>`:""}</div>`).join("")+`<div class="card"><b>Новый аккаунт</b><div class="row" style="margin-top:6px"><input id="na" type="text" maxlength="40" placeholder="Название, например Одноклассники" class="g" value="${esc(nN)}" oninput="nN=this.value" onkeydown="if(event.key==='Enter')addAcc()" style="min-width:0"></div>${accPick("n",nE,nC)}<p class="mut">Так будет выглядеть: ${nE} ${accName({n:nN||"Название",m:nC})}</p><p><button class="p" onclick="addAcc()">Добавить</button></p></div>`;return}
- let ban="",nm="",pg="",cd="",ct="",pk="";
+ let ban="",nm="",nv="",pg="",cd="",ct="",pk="";
  if(mode){const x=V.acc[mode.a];ban=`<div class="banner">Привязка: ${esc(x.n)}. Откройте страницу и нажмите на пароль, который хотите привязать.<br><button onclick="go('acc')">Отмена</button></div>`}
  nm=`<h2>${esc(NM)}</h2>`;
- ct=`<button onclick="showPick=!showPick;render()">${showPick?"Скрыть поиск":"Найти страницу"}</button><input type="number" min="1" max="${TOT}" placeholder="№ стр." style="width:110px;margin:0" onchange="setPage(this.value-1)"><label class="mut"><input type="checkbox" ${blur?"checked":""} onchange="blur=this.checked;render()"> размыть текст</label>`;
+ ct=`<input type="number" id="pn" min="1" max="${TOT}" placeholder="№ стр." style="width:110px;margin:0" onkeydown="if(event.key==='Enter')goPage()"><button class="p" onclick="goPage()">Перейти на страницу</button><label class="mut"><input type="checkbox" ${blur?"checked":""} onchange="blur=this.checked;render()"> размыть текст</label>`;
  if(showPick)pk=`<div class="card"><div class="row" style="margin-bottom:6px">${CT.map((c,i)=>`<button class="${i===tab?"p":""}" onclick="tab=${i};render()">${c[0]}</button>`).join("")}</div><div class="mut">Выбрано:</div><div>${chips()}</div><div class="pk2"><div><div class="mut">1) первый значок</div>${grid(0)}${cr(1,"цвет первого значка (необязательно)")}${dr(2,"цифра первого значка (необязательно)")}</div><div><div class="mut">2) второй значок</div>${grid(3)}${cr(4,"цвет второго значка (необязательно)")}${dr(5,"цифра второго значка (необязательно)")}</div></div><p><button class="p" onclick="openPick()">Открыть страницу</button></p></div>`;
- if(P){pg=`<div class="nav"><button onclick="setPage(enc(cur)-1)" aria-label="Назад">←</button><div><div class="big" style="margin:0">${ptag(cur)}</div><div class="mut">стр. ${(enc(cur)+1).toLocaleString("ru")} из ${TOT.toLocaleString("ru")}</div></div><button onclick="setPage(enc(cur)+1)" aria-label="Вперёд">→</button></div>`;pg+=`<div class="paper ${blur?"blur":""}">${P.map((x,l)=>`<div class="lr ${sel===l?"sel":""}"><input class="lb" type="text" maxlength="40" value="${esc(x.w)}" aria-label="Название строки ${l+1}" onchange="setLb(${l},this.value)"><div class="pw"><button class="ln ${x.c>=0?"m":""}" ${x.c>=0?`style="background:${C[x.c].c}"`:""} onclick="tap(${l})">${x.t}</button><button class="cp" onclick="copy(P[${l}].t)" aria-label="Копировать пароль строки ${l+1}">Копировать</button></div></div>`).join("")}</div>`;
+ if(P){nv=`<div class="nav"><div class="nl"><button onclick="setPage(enc(cur)-1)" aria-label="Назад">←</button><button class="fp" onclick="showPick=!showPick;render()">${showPick?"Скрыть поиск":"Найти страницу"}</button></div><div class="ni"><div class="big" style="margin:0">${ptag(cur)}</div><div class="mut">стр. ${(enc(cur)+1).toLocaleString("ru")} из ${TOT.toLocaleString("ru")}</div></div><div class="nr"><button onclick="setPage(enc(cur)+1)" aria-label="Вперёд">→</button></div></div>`;pg=`<div class="paper ${blur?"blur":""}">${P.map((x,l)=>`<div class="lr ${sel===l?"sel":""}"><input class="lb" type="text" maxlength="40" value="${esc(x.w)}" aria-label="Название строки ${l+1}" onchange="setLb(${l},this.value)"><div class="pw"><button class="ln ${x.c>=0?"m":""}" ${x.c>=0?`style="background:${C[x.c].c}"`:""} onclick="tap(${l})">${x.t}</button><button class="cp" onclick="copy(P[${l}].t)" aria-label="Копировать пароль строки ${l+1}">Копировать</button></div></div>`).join("")}</div>`;
   if(sel!==null&&!mode){const c=P[sel].c;cd=`<div class="card"><b>Строка ${sel+1}${c>=0?": "+C[c].n+" маркер":": без маркера"}</b><div class="mut" style="margin-top:6px">Маркер этой строки (выберите цвет или уберите)</div><div class="pick" style="grid-template-columns:repeat(7,1fr)">${C.map((x,j)=>`<button class="${c===j?"on":""}" title="${x.n}" aria-label="${x.n} маркер" onclick="setMk(${sel},${j})"><span class="sw" style="background:${x.c};border:1px solid var(--line);width:20px;height:20px;margin:0"></span></button>`).join("")}<button ${c<0?"disabled":""} onclick="setMk(${sel},-1)" aria-label="Убрать маркер">✕</button></div><div class="row" style="margin-top:8px"><button class="p" onclick="copy(P[sel].t)">Скопировать</button><select id="bs" class="g">${V.acc.map((x,i)=>`<option value="${i}">${esc(x.n)}</option>`).join("")}</select><button onclick="bindSel()">Привязать</button></div></div>`}else if(!mode)cd=`<div class="card ph"><b>Строка не выбрана</b><p class="mut">Нажмите на пароль, чтобы выбрать цвет маркера, скопировать пароль или привязать его к аккаунту.</p></div>`}
  else if(!showPick)pg=`<p class="mut">Нажмите «Найти страницу».</p>`;
- a.innerHTML=`<div class="bv${mode?" bind":""}"><div class="a-ban">${ban}</div><div class="a-name">${nm}</div><div class="a-page">${pg}</div><div class="a-card">${cd}</div><div class="a-ctrl row">${ct}</div><div class="a-pick">${pk}</div></div>`}
+ a.innerHTML=`<div class="bv${mode?" bind":""}"><div class="a-ban">${ban}</div><div class="a-name">${nm}</div><div class="a-nav">${nv}</div><div class="a-page">${pg}</div><div class="a-card">${cd}</div><div class="a-ctrl row">${ct}</div><div class="a-pick">${pk}</div></div>`}
 applyTheme();render();
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 </script></body></html>
